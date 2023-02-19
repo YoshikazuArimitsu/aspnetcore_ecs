@@ -25,12 +25,16 @@ resource "aws_security_group_rule" "from_alb_to_fargate" {
 
 resource "aws_ecs_cluster" "ecs_cluster" {
   name               = "${var.prefix}-ecs-cluster"
-  capacity_providers = ["FARGATE", "FARGATE_SPOT"]
 
   setting {
     name  = "containerInsights"
     value = "enabled"
   }
+}
+
+resource "aws_ecs_cluster_capacity_providers" "cluster_capacity_provider" {
+  cluster_name       = aws_ecs_cluster.ecs_cluster.name
+  capacity_providers   = ["FARGATE"]
 
   default_capacity_provider_strategy {
     capacity_provider = "FARGATE"
