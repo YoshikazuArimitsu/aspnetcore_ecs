@@ -60,7 +60,7 @@ phases:
     commands:
       - echo pre_build
       - echo Logging in to Amazon ECR...
-      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+      - $(aws ecr get-login --no-include-email --region ap-northeast-1)
 
   build:
     commands:
@@ -68,11 +68,24 @@ phases:
       - echo build docker image
       - docker build -t webapp -f ./Server/WebApplication1/Dockerfile ./Server
 
+      - echo build unittest docker image
+      - docker build -t webapp.test -f ./Server/WebApplication1.Test/Dockerfile ./Server
+
+      - echo running unittest
+      - mkdir /tmp/TestResults
+      - docker run -v /tmp/TestResults:/TestResults webapp.test
+
   post_build:
     commands:
       - echo post_build
       - docker tag webapp:latest ${aws_ecr_repository.webapp.repository_url}:latest
       - docker push ${aws_ecr_repository.webapp.repository_url}:latest
+
+reports:
+  unittest-rep-group:
+    files:
+      - '**/*'
+    base-directory: /tmp/TestResults/
 EOF
 }
 
@@ -93,7 +106,7 @@ resource "aws_codebuild_project" "codebuild_project" {
 
   environment {
     compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "aws/codebuild/standard:6.0"
+    image                       = "aws/codebuild/docker:18.09.0"
     type                        = "LINUX_CONTAINER"
     privileged_mode             = true
     image_pull_credentials_type = "CODEBUILD"
