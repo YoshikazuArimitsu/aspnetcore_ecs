@@ -82,10 +82,16 @@ phases:
       - docker push ${aws_ecr_repository.webapp.repository_url}:latest
 
 reports:
-  unittest-rep-group:
+  trx-report:
     files:
-      - '**/*'
+      - '**/*.trx'
     base-directory: /tmp/TestResults/
+    file-format: VISUALSTUDIOTRX
+  coverage:
+    files:
+      - '**/coverage.cobertura.xml'
+    base-directory: /tmp/TestResults/
+    file-format: COBERTURAXML
 EOF
 }
 

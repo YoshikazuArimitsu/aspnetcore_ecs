@@ -17,5 +17,5 @@ RUN mkdir /TestResults
 
 FROM build AS testing
 WORKDIR /src
-ENTRYPOINT ["dotnet", "test" ,"--collect:\"XPlat Code Coverage\"", "--results-directory", "/TestResults"]
+ENTRYPOINT ["dotnet", "test" , "--logger", "trx", "--collect:\"XPlat Code Coverage\"", "--results-directory", "/TestResults"]
 
