@@ -7,3 +7,7 @@ resource "aws_ecr_repository" "webapp" {
     scan_on_push = true
   }
 }
+
+output "ecr_image_url" {
+  value = aws_ecr_repository.webapp.repository_url
+}

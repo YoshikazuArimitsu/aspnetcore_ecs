@@ -1,0 +1,6 @@
+[
+    {
+        "name": "webapp",
+        "imageUri": "218226060097.dkr.ecr.ap-northeast-1.amazonaws.com/examplewebapp-ecr:latest"
+    }
+]

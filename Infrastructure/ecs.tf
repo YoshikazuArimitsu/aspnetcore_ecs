@@ -153,6 +153,10 @@ locals {
     "command" : [
     ],
     "environment" : [
+      {
+        "name" : "ASPNETCORE_ENVIRONMENT",
+        "value" : "Development"
+      }
     ]
   }
 ]
