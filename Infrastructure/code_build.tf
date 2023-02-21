@@ -1,18 +1,18 @@
 data "aws_iam_policy_document" "codebuild_assume_role_policy_document" {
   statement {
-    sid = "CodebuildExecution"
+    sid     = "CodebuildExecution"
     actions = ["sts:AssumeRole"]
 
     principals {
-      type = "Service"
+      type        = "Service"
       identifiers = ["codebuild.amazonaws.com"]
     }
   }
 }
 
 resource "aws_iam_role" "codebuild_role" {
-  name = "${var.prefix}-codebuild"
-  assume_role_policy = "${data.aws_iam_policy_document.codebuild_assume_role_policy_document.json}"
+  name               = "${var.prefix}-codebuild"
+  assume_role_policy = data.aws_iam_policy_document.codebuild_assume_role_policy_document.json
 }
 
 data "aws_iam_policy_document" "codebuild_policy_document" {
@@ -47,8 +47,8 @@ data "aws_iam_policy_document" "codebuild_policy_document" {
 }
 
 resource "aws_iam_role_policy" "codebuild_role_policy" {
-  role = "${aws_iam_role.codebuild_role.name}"
-  policy = "${data.aws_iam_policy_document.codebuild_policy_document.json}"
+  role   = aws_iam_role.codebuild_role.name
+  policy = data.aws_iam_policy_document.codebuild_policy_document.json
 }
 
 data "template_file" "buildspec_template_file" {
@@ -99,7 +99,7 @@ resource "aws_codebuild_project" "codebuild_project" {
   name          = "${var.prefix}-codebuild-project"
   description   = "${var.prefix}-codebuild-project"
   build_timeout = "30"
-  service_role  = "${aws_iam_role.codebuild_role.arn}"
+  service_role  = aws_iam_role.codebuild_role.arn
 
   artifacts {
     type = "NO_ARTIFACTS"
@@ -119,8 +119,8 @@ resource "aws_codebuild_project" "codebuild_project" {
   }
 
   source {
-    type = "GITHUB"
+    type      = "GITHUB"
     location  = "https://github.com/YoshikazuArimitsu/aspnetcore_ecs.git"
-    buildspec = "${data.template_file.buildspec_template_file.rendered}"
+    buildspec = data.template_file.buildspec_template_file.rendered
   }
 }

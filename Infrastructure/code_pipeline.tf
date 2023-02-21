@@ -105,7 +105,7 @@ resource "aws_codepipeline" "codepipeline" {
       output_artifacts = ["ECRArtifact"]
 
       configuration = {
-        ImageTag = "latest"
+        ImageTag       = "latest"
         RepositoryName = aws_ecr_repository.webapp.name
       }
     }
